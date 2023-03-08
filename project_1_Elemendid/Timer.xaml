@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="project_1_Elemendid.Timer">
+    <ContentPage.Content>
+        <StackLayout x:Name="st">
+            <Button x:Name="tagasibtn"
+                    Text="Tagasi"
+                    FontSize="Medium"
+                    BackgroundColor="DarkGray"
+                    TextColor="White"
+                    Clicked="tagasibtn_Clicked_1"
+                    >
+            </Button>
+            <Label x:Name="ongoing"
+                   Text="Timer is going"
+                   FontSize="Title"
+                   BackgroundColor="CadetBlue"
+                   TextColor="White"
+                   >
+            </Label>
+            <Label x:Name="lbl"
+                   Text="Klik siia"
+                   FontSize="Title"
+                   BackgroundColor="CadetBlue"
+                   TextColor="White"
+                   >
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
+                </Label.GestureRecognizers>
+            </Label>
+            <Button x:Name="stopbtn"
+                    Text="Stop Timer"
+                    FontSize="Medium"
+                    BackgroundColor="DarkGray"
+                    TextColor="White"
+                    >
+            </Button>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
