@@ -131,11 +131,11 @@ namespace project_1_Elemendid
             red = rnd.Next(0, 255);
             green = rnd.Next(0, 255);
             blue = rnd.Next(0, 255);
-            
+            int currentStep = 0;
             while (true)
             {
                 int gradientStep = 4;
-                int currentStep = (int)(DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond) % gradientStep;
+                currentStep += 1;
                 int red = (int)(255.0 / gradientStep * currentStep);
                 int green = (int)(255.0 / gradientStep * currentStep);
                 int blue = (int)(255.0 / gradientStep * currentStep);
