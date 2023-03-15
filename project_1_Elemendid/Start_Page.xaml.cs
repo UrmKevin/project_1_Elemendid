@@ -12,54 +12,35 @@ namespace project_1_Elemendid
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Start_Page : ContentPage
     {
+        List<ContentPage> contentPages = new List<ContentPage>() { new Text_Page(), new Timer(), new Box_Page(), new StepperSlider_Page(), new RGB_Page() };
+        List<string> text = new List<string> { "Text Page", "Timer", "Box Page", "Stepper and Slider", "RGB" };
         public Start_Page()
         {
-            Button Textbtn = new Button
-            {
-                Text= "Text Page",
-                BackgroundColor= Color.DarkGray,
-                TextColor= Color.White,
-            };
-            Button Timerbtn = new Button
-            {
-                Text = "Timer Page",
-                BackgroundColor = Color.DarkGray,
-                TextColor = Color.White,
-            };
-            Button Boxbtn = new Button
-            {
-                Text = "Box Page",
-                BackgroundColor = Color.DarkGray,
-                TextColor = Color.White,
-            };
-            Textbtn.Clicked += Textbtn_Clicked;
-            Timerbtn.Clicked += Timerbtn_Clicked;
-            Boxbtn.Clicked += Boxbtn_Clicked;
-            StackLayout st=new StackLayout 
+            
+            StackLayout st = new StackLayout 
             { 
                 Orientation= StackOrientation.Vertical,
-                BackgroundColor = Color.White,
-                Children=
-                {
-                    Textbtn,Timerbtn,Boxbtn
-                }
+                BackgroundColor = Color.White
             };
+            for (int i = 0; i < contentPages.Count; i++)
+            {
+                Button button = new Button
+                {
+                    Text = text[i],
+                    TabIndex = i,
+                    BackgroundColor = Color.DarkGray,
+                    TextColor = Color.White,
+                };
+                button.Clicked += NavigationFunction;
+                st.Children.Add(button);
+            }
             Content = st;
         }
 
-        private async void Boxbtn_Clicked(object sender, EventArgs e)
+        private async void NavigationFunction(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new Box_Page());
-        }
-
-        private async void Timerbtn_Clicked(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new Timer());
-        }
-
-        private async void Textbtn_Clicked(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new Text_Page());
+            Button b = (Button)sender; // Button b = sender as Button;
+            await Navigation.PushAsync(contentPages[b.TabIndex]);
         }
     }
 }
