@@ -18,6 +18,8 @@ namespace project_1_Elemendid
         List<Xamarin.Forms.Slider> sliders = new List<Xamarin.Forms.Slider>() { new Xamarin.Forms.Slider(), new Xamarin.Forms.Slider(), new Xamarin.Forms.Slider() };
         List<string> names = new List<string> { "Red", "Green", "Blue"};
         List<Xamarin.Forms.Slider> slidersonly = new List<Xamarin.Forms.Slider> { };
+        // List of objects
+        List<Object> objects = new List<Object> { };
         Xamarin.Forms.BoxView box;
         Random rnd = new Random();
         Button rndColor, rainbow;
@@ -26,8 +28,6 @@ namespace project_1_Elemendid
             // Title name
             Title = "RGB";
 
-            // List of objects
-            List<Object> objects = new List<Object> { };
             // Creating Button
             rndColor = new Button
             {
@@ -88,31 +88,28 @@ namespace project_1_Elemendid
             // AbsoluteLayout
             AbsoluteLayout abs = new AbsoluteLayout();
             double y = 0.5;
-            int forbox = 1;
+            int forbox = 0;
             foreach (var item in objects)
             {
                 y += 0.05;
+                forbox += 1;
                 if (forbox == 1)
                 {
-                    forbox += 1;
                     AbsoluteLayout.SetLayoutBounds((BindableObject)item, new Rectangle(0, 0, 400, 400));
                     AbsoluteLayout.SetLayoutFlags((BindableObject)item, AbsoluteLayoutFlags.PositionProportional);
                 }
                 else
                 {
-                    forbox += 1;
                     AbsoluteLayout.SetLayoutBounds((BindableObject)item, new Rectangle(0.1, y, 400, 25));
+                    AbsoluteLayout.SetLayoutFlags((BindableObject)item, AbsoluteLayoutFlags.PositionProportional);
+                }
+                if (forbox == 5)
+                {
+                    AbsoluteLayout.SetLayoutBounds((BindableObject)item, new Rectangle(0.1, 0.9, 400, 50));
                     AbsoluteLayout.SetLayoutFlags((BindableObject)item, AbsoluteLayoutFlags.PositionProportional);
                 }
                 if (forbox == 6)
                 {
-                    forbox += 1;
-                    AbsoluteLayout.SetLayoutBounds((BindableObject)item, new Rectangle(0.1, 0.95, 400, 50));
-                    AbsoluteLayout.SetLayoutFlags((BindableObject)item, AbsoluteLayoutFlags.PositionProportional);
-                }
-                if (forbox == 7)
-                {
-                    forbox += 1;
                     AbsoluteLayout.SetLayoutBounds((BindableObject)item, new Rectangle(0.1, 1, 400, 50));
                     AbsoluteLayout.SetLayoutFlags((BindableObject)item, AbsoluteLayoutFlags.PositionProportional);
                 }
@@ -120,44 +117,40 @@ namespace project_1_Elemendid
             }
             Content = abs;
         }
-        // Make BoxView change colors randomly
-        bool cycle = false;
         // For FromRgb
         int red;
         int green;
         int blue;
+        // Make BoxView change colors randomly
         private async void Glow_Clicked(object sender, EventArgs e)
         {
             red = rnd.Next(0, 255);
             green = rnd.Next(0, 255);
             blue = rnd.Next(0, 255);
-            int currentStep = 0;
+            Color rndColor = Color.FromRgb(red, green, blue);
             while (true)
             {
-                int gradientStep = 4;
-                currentStep += 1;
-                int red = (int)(255.0 / gradientStep * currentStep);
-                int green = (int)(255.0 / gradientStep * currentStep);
-                int blue = (int)(255.0 / gradientStep * currentStep);
-                Color gradientColor = Color.FromRgb(red, green, blue); 
-
-                box.Color = gradientColor;
-                await Task.Delay(100);
-                if (cycle == true)
+                red += 5;
+                green += 5;
+                blue += 5;
+                box.Color = rndColor;
+                await Task.Delay(50);
+                if (box.Color == Color.FromRgb(255,255,255))
                 {
-                    cycle = false;
                     break;
-                }
-                else
-                {
-                    cycle = true;
                 }
             }
         }
         // Random color
-        private void RndColor_Clicked(object sender, EventArgs e)
+        private async void RndColor_Clicked(object sender, EventArgs e)
         {
-            box.Color = Color.FromRgb(rnd.Next(1,255), rnd.Next(1, 255), rnd.Next(1, 255));
+            red = rnd.Next(0, 255);
+            slidersonly[0].Value = red;
+            green = rnd.Next(0, 255);
+            slidersonly[1].Value = green;
+            blue = rnd.Next(0, 255);
+            slidersonly[2].Value = blue;
+            box.Color = Color.FromRgb(red, green, blue);
         }
 
 
