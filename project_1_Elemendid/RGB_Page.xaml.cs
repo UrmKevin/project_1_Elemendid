@@ -9,20 +9,22 @@ using Xamarin.Forms.Internals;
 using Xamarin.Forms.PlatformConfiguration.GTKSpecific;
 using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
 using Xamarin.Forms.Xaml;
+using static System.Net.WebRequestMethods;
 
 namespace project_1_Elemendid
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class RGB_Page : ContentPage
     {
-        List<Xamarin.Forms.Slider> sliders = new List<Xamarin.Forms.Slider>() { new Xamarin.Forms.Slider(), new Xamarin.Forms.Slider(), new Xamarin.Forms.Slider() };
-        List<string> names = new List<string> { "Red", "Green", "Blue"};
+        List<Xamarin.Forms.Slider> sliders = new List<Xamarin.Forms.Slider> { new Xamarin.Forms.Slider(), new Xamarin.Forms.Slider(), new Xamarin.Forms.Slider(), new Xamarin.Forms.Slider() };
+        List<string> names = new List<string> { "Red", "Green", "Blue", "Round"};
         List<Xamarin.Forms.Slider> slidersonly = new List<Xamarin.Forms.Slider> { };
-        // List of objects
+        List<Label> labelsonly = new List<Label> { };
         List<Object> objects = new List<Object> { };
         Xamarin.Forms.BoxView box;
         Random rnd = new Random();
-        Button rndColor, rainbow;
+        Button rndColor;
+        Stepper changeSize;
         public RGB_Page()
         {
             // Title name
@@ -36,13 +38,16 @@ namespace project_1_Elemendid
                 TextColor = Color.White,
             };
             rndColor.Clicked += RndColor_Clicked;
-            rainbow = new Button
+            changeSize = new Stepper
             {
-                Text = "Rainbow",
-                BackgroundColor = Color.DarkGray,
-                TextColor = Color.White,
+                Minimum = 0,
+                Maximum = 400,
+                Value = 400,
+                Increment = 100,
+                WidthRequest = 100,
+                HeightRequest = 50,
             };
-            rainbow.Clicked += Glow_Clicked;
+            changeSize.ValueChanged += ChangeSize_ValueChanged;
             // Creating BoxView
             box = new Xamarin.Forms.BoxView
             {
@@ -54,6 +59,7 @@ namespace project_1_Elemendid
             };
             objects.Add(box);
             // creating slider and adding them to a list
+            int counter = 0;
             for (int i = 0; i < sliders.Count; i++)
             {
                 string min = "#000000";
@@ -69,6 +75,10 @@ namespace project_1_Elemendid
                 {
                     min = "#0000FF";
                 }
+                else if (names[i] == "Round")
+                {
+                    min = "#000000";
+                }
                 Xamarin.Forms.Slider slider = new Xamarin.Forms.Slider
                 {
                     TabIndex = i,
@@ -79,10 +89,45 @@ namespace project_1_Elemendid
                     MinimumTrackColor = Color.FromHex(min),
                     MaximumTrackColor = Color.LightGray,
                 };
-                slider.ValueChanged += Slider_ValueChanged;
-                objects.Add(slider); slidersonly.Add(slider);
+                if (names[i] == "Round")
+                {
+                    slider.Minimum = 1;
+                    slider.Maximum = 200;
+                    slider.ThumbColor = Color.Black;
+                    slider.MinimumTrackColor = Color.Black;
+                    slider.ValueChanged += Slider_ValueChanged1;
+                }
+                else
+                {
+                    slider.ValueChanged += Slider_ValueChanged;
+                }
+                objects.Add(slider);
+                slidersonly.Add(slider);
+                if (counter < 3)
+                {
+                    counter++;
+                    Label label = new Label
+                    {
+                        WidthRequest = 350,
+                        HorizontalOptions = LayoutOptions.Center,
+                    };
+                    if (counter == 1)
+                    {
+                        label.Text = "R: 0";
+                    }
+                    else if (counter == 2)
+                    {
+                        label.Text = "G: 0";
+                    }
+                    else
+                    {
+                        label.Text = "B: 0";
+                    }
+                    objects.Add(label);
+                    labelsonly.Add(label);
+                }
             }
-            objects.Add(rainbow);
+            objects.Add(changeSize);
             objects.Add(rndColor);
 
             // AbsoluteLayout
@@ -91,7 +136,7 @@ namespace project_1_Elemendid
             int forbox = 0;
             foreach (var item in objects)
             {
-                y += 0.05;
+                y += 0.04;
                 forbox += 1;
                 if (forbox == 1)
                 {
@@ -100,15 +145,15 @@ namespace project_1_Elemendid
                 }
                 else
                 {
-                    AbsoluteLayout.SetLayoutBounds((BindableObject)item, new Rectangle(0.1, y, 400, 25));
+                    AbsoluteLayout.SetLayoutBounds((BindableObject)item, new Rectangle(0.1, y, 400, 20));
                     AbsoluteLayout.SetLayoutFlags((BindableObject)item, AbsoluteLayoutFlags.PositionProportional);
                 }
-                if (forbox == 5)
+                if (forbox == 9)
                 {
                     AbsoluteLayout.SetLayoutBounds((BindableObject)item, new Rectangle(0.1, 0.9, 400, 50));
                     AbsoluteLayout.SetLayoutFlags((BindableObject)item, AbsoluteLayoutFlags.PositionProportional);
                 }
-                if (forbox == 6)
+                if (forbox == 10)
                 {
                     AbsoluteLayout.SetLayoutBounds((BindableObject)item, new Rectangle(0.1, 1, 400, 50));
                     AbsoluteLayout.SetLayoutFlags((BindableObject)item, AbsoluteLayoutFlags.PositionProportional);
@@ -117,42 +162,46 @@ namespace project_1_Elemendid
             }
             Content = abs;
         }
+
+        private void ChangeSize_ValueChanged(object sender, ValueChangedEventArgs e)
+        {
+            box.WidthRequest = changeSize.Value;
+            box.HeightRequest = changeSize.Value;
+            slidersonly[3].Maximum = box.WidthRequest / 2;
+        }
+
+        private void Slider_ValueChanged1(object sender, ValueChangedEventArgs e)
+        {
+            var slider = (Xamarin.Forms.Slider)sender;
+            box.CornerRadius = slider.Value;
+        }
+
         // For FromRgb
         int red;
         int green;
         int blue;
-        // Make BoxView change colors randomly
-        private async void Glow_Clicked(object sender, EventArgs e)
-        {
-            red = rnd.Next(0, 255);
-            green = rnd.Next(0, 255);
-            blue = rnd.Next(0, 255);
-            Color rndColor = Color.FromRgb(red, green, blue);
-            while (true)
-            {
-                red += 5;
-                green += 5;
-                blue += 5;
-                box.Color = rndColor;
-                await Task.Delay(50);
-                if (box.Color == Color.FromRgb(255,255,255))
-                {
-                    break;
-                }
-            }
-        }
+        //double redSlider;
+        Color boxColor;
         // Random color
-        private async void RndColor_Clicked(object sender, EventArgs e)
+        private void RndColor_Clicked(object sender, EventArgs e)
         {
             red = rnd.Next(0, 255);
             slidersonly[0].Value = red;
+            //while (redSlider < red)
+            //{
+            //    redSlider += 5;    
+            //    slidersonly[0].Value += 5;
+            //}
             green = rnd.Next(0, 255);
             slidersonly[1].Value = green;
             blue = rnd.Next(0, 255);
             slidersonly[2].Value = blue;
-            box.Color = Color.FromRgb(red, green, blue);
-        }
+            boxColor = Color.FromRgb(red, green, blue);
+            box.Color = boxColor;
 
+            sliders[3].ThumbColor = boxColor;
+            sliders[3].MinimumTrackColor = boxColor;
+        }
 
         // Changing color of a box by using FromRgb() for sliders
         private void Slider_ValueChanged(object sender, ValueChangedEventArgs e)
@@ -161,14 +210,17 @@ namespace project_1_Elemendid
             if (slider.ThumbColor == Color.FromHex("#FF0000"))
             {
                 red = (int)e.NewValue;
+                labelsonly[0].Text = "R: " + red;
             }
             else if (slider.ThumbColor == Color.FromHex("#00FF00"))
             {
                 green = (int)e.NewValue;
+                labelsonly[1].Text = "G: " + green;
             }
             else if (slider.ThumbColor == Color.FromHex("#0000FF"))
             {
                 blue = (int)e.NewValue;
+                labelsonly[2].Text = "B: " + blue;
             }
             box.Color = Color.FromRgb(red, green, blue);
         }
