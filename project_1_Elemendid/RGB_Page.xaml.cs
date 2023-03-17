@@ -21,10 +21,12 @@ namespace project_1_Elemendid
         List<Xamarin.Forms.Slider> slidersonly = new List<Xamarin.Forms.Slider> { };
         List<Label> labelsonly = new List<Label> { };
         List<Object> objects = new List<Object> { };
+        AbsoluteLayout abs = new AbsoluteLayout();
         Xamarin.Forms.BoxView box;
         Random rnd = new Random();
         Button rndColor;
         Stepper changeSize;
+        double bx = 0, by = 0;
         public RGB_Page()
         {
             // Title name
@@ -130,8 +132,6 @@ namespace project_1_Elemendid
             objects.Add(changeSize);
             objects.Add(rndColor);
 
-            // AbsoluteLayout
-            AbsoluteLayout abs = new AbsoluteLayout();
             double y = 0.5;
             int forbox = 0;
             foreach (var item in objects)
@@ -140,7 +140,7 @@ namespace project_1_Elemendid
                 forbox += 1;
                 if (forbox == 1)
                 {
-                    AbsoluteLayout.SetLayoutBounds((BindableObject)item, new Rectangle(0, 0, 400, 400));
+                    AbsoluteLayout.SetLayoutBounds((BindableObject)item, new Rectangle(bx, by, 400, 400));
                     AbsoluteLayout.SetLayoutFlags((BindableObject)item, AbsoluteLayoutFlags.PositionProportional);
                 }
                 else
@@ -165,9 +165,33 @@ namespace project_1_Elemendid
 
         private void ChangeSize_ValueChanged(object sender, ValueChangedEventArgs e)
         {
-            box.WidthRequest = changeSize.Value;
-            box.HeightRequest = changeSize.Value;
-            slidersonly[3].Maximum = box.WidthRequest / 2;
+            double newValue = e.NewValue;
+
+            box.HeightRequest = newValue;
+            box.WidthRequest = newValue;
+
+            if (newValue == 400)
+            {
+                bx = 0;
+                by = 0;
+            }
+            else if (newValue == 300)
+            {
+                bx = 0.5;
+                by = 0.1;
+            }
+            else if (newValue == 200)
+            {
+                bx = 0.5;
+                by = 0.18;
+            }
+            else if (newValue == 100)
+            {
+                bx = 0.5;
+                by = 0.25;
+            }
+
+            AbsoluteLayout.SetLayoutBounds(box, new Rectangle(bx, by, box.HeightRequest, box.WidthRequest));
         }
 
         private void Slider_ValueChanged1(object sender, ValueChangedEventArgs e)

@@ -48,7 +48,7 @@ namespace project_1_Elemendid
             };
         }
         int i;
-        private async void Editor_TextChanged(object sender, TextChangedEventArgs e)
+        private void Editor_TextChanged(object sender, TextChangedEventArgs e)
         {
             //lbl.Text = editor.Text;
             char key = e.NewTextValue?.LastOrDefault() ?? ' ';

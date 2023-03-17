@@ -12,8 +12,8 @@ namespace project_1_Elemendid
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Start_Page : ContentPage
     {
-        List<ContentPage> contentPages = new List<ContentPage>() { new Text_Page(), new Timer(), new Box_Page(), new StepperSlider_Page(), new RGB_Page() };
-        List<string> text = new List<string> { "Text Page", "Timer", "Box Page", "Stepper and Slider", "RGB" };
+        List<ContentPage> contentPages = new List<ContentPage>() { new Text_Page(), new Timer(), new Box_Page(), new StepperSlider_Page(), new RGB_Page(), new DatePicker_Page() };
+        List<string> text = new List<string> { "Text Page", "Timer", "Box Page", "Stepper and Slider", "RGB", "DatePicker"};
         public Start_Page()
         {
             
